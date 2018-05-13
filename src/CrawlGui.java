@@ -53,6 +53,13 @@ public class CrawlGui extends Application {
         buttonArea.add(fight, 0, 6);
         buttonArea.add(save, 0, 7);
 
+        BorderPane top = new BorderPane();
+        Cartographer cartographer = new Cartographer(startingRoom);
+        cartographer.update();
+        top.setCenter(cartographer);
+
+        top.setRight(buttonArea);
+
         BorderPane root = new BorderPane();
         root.setTop(top);
         root.setCenter(t2);
