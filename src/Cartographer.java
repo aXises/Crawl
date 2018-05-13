@@ -11,3 +11,14 @@ public class Cartographer extends Canvas {
         root = startingRoom;
         gc.setLineWidth(1.0);
     }
+
+    public void update() {
+        BoundsMapper bm = new BoundsMapper(root);
+        bm.walk();
+        setWidth((bm.xMax + abs(bm.xMin) + 1) * 100);
+        setHeight((bm.yMax + abs(bm.yMin) + 1) * 100);
+        gc.clearRect(0, 0, getWidth(), getHeight());
+        gc.strokeRect(0, 0, getWidth(), getHeight());
+        }
+    }
+
