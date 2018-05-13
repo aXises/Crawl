@@ -30,6 +30,7 @@ public class CrawlGui extends Application {
 
     public void start(Stage stage) {
         stage.setTitle("Crawl");
+        TextArea t2=new TextArea("bot");
         GridPane buttonArea = new GridPane();
         Button north = new Button("North");
         Button west = new Button("West");
@@ -52,5 +53,12 @@ public class CrawlGui extends Application {
         buttonArea.add(fight, 0, 6);
         buttonArea.add(save, 0, 7);
 
+        BorderPane root = new BorderPane();
+        root.setTop(top);
+        root.setCenter(t2);
+
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 }
