@@ -55,3 +55,8 @@ public class Cartographer extends Canvas {
         }
     }
 
+    private Double[] getMid() {
+        Double[] xy = {getWidth()/2, getHeight()/2};
+        return xy;
+    }
+}
