@@ -16,7 +16,9 @@ public class CrawlGui extends Application {
             System.exit(1);
         }
         if (MapIO.loadMap(args[0]) != null) {
-            startingRoom = (Room) MapIO.loadMap(args[0])[1];
+            Object content[] = MapIO.loadMap(args[0]);
+            startingRoom = (Room) content[1];
+            startingRoom.enter((Player) content[0]);
 
         } else if (MapIO.deserializeMap(args[0]) != null) {
             startingRoom = MapIO.deserializeMap(args[0]);
