@@ -12,6 +12,10 @@ public class Cartographer extends Canvas {
         gc.setLineWidth(1.0);
     }
 
+    private int abs(int n) {
+      return n < 0 ? (-1 * n) : n;
+    }
+
     public void update() {
         BoundsMapper bm = new BoundsMapper(root);
         bm.walk();
@@ -19,6 +23,35 @@ public class Cartographer extends Canvas {
         setHeight((bm.yMax + abs(bm.yMin) + 1) * 100);
         gc.clearRect(0, 0, getWidth(), getHeight());
         gc.strokeRect(0, 0, getWidth(), getHeight());
+        for (Room key: bm.coords.keySet()) {
+            drawRoom(bm.coords.get(key).x, bm.coords.get(key).y, key);
+        }
+    }
+    private void drawRoom(int x, int y, Room room) {
+        Double xMid = getMid()[0] - (length / 2) + (x * length);
+        Double yMid = getMid()[1] - (length / 2) + (y * length);
+        gc.strokeRect(xMid, yMid, length, length);
+        for (String exit : room.getExits().keySet()) {
+            switch(exit) {
+                case "North":
+                    gc.strokeLine(xMid + (length / 2), yMid - 5, xMid + (length
+                            / 2), yMid);
+                    break;
+                case "South":
+                    gc.strokeLine(xMid + (length / 2), yMid + length, xMid +
+                            (length / 2), yMid + length + 5);
+                    break;
+                case "East":
+                    gc.strokeLine(xMid + length, yMid + (length / 2), xMid +
+                            length + 5, yMid + (length / 2));
+                    break;
+                case "West":
+                    gc.strokeLine(xMid, yMid + (length / 2), xMid - 5, yMid +
+                            (length / 2));
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
