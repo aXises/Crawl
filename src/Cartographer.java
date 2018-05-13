@@ -53,6 +53,17 @@ public class Cartographer extends Canvas {
                     break;
             }
         }
+        for (Thing thing : room.getContents()) {
+            if (thing instanceof Player) {
+                gc.fillText("@", xMid, yMid + length / 4);
+            }
+            else if (thing instanceof Treasure) {
+                gc.fillText("$", xMid + (length / 2), yMid + (length / 4));
+            }
+            else if (thing instanceof Critter) {
+                gc.fillText("M", xMid, yMid + (length / 1.5));
+            }
+        }
     }
 
     private Double[] getMid() {
