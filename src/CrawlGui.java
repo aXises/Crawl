@@ -9,6 +9,11 @@ import javafx.stage.Stage;
 
 public class CrawlGui extends Application {
     private static Room startingRoom;
+    private static Player player;
+    private Room currentRoom;
+    private GridPane buttonArea = new GridPane();
+    private TextArea messageArea = new TextArea();
+    private Cartographer cartographer;
 
     public static void main(String args[]) {
         if (args.length != 1) {
@@ -18,7 +23,7 @@ public class CrawlGui extends Application {
         if (MapIO.loadMap(args[0]) != null) {
             Object content[] = MapIO.loadMap(args[0]);
             startingRoom = (Room) content[1];
-            startingRoom.enter((Player) content[0]);
+            player = (Player) content[0];
 
         } else if (MapIO.deserializeMap(args[0]) != null) {
             startingRoom = MapIO.deserializeMap(args[0]);
@@ -32,8 +37,28 @@ public class CrawlGui extends Application {
 
     public void start(Stage stage) {
         stage.setTitle("Crawl");
-        TextArea t2=new TextArea("bot");
-        GridPane buttonArea = new GridPane();
+        generateButtons();
+        startingRoom.enter(player);
+        currentRoom = startingRoom;
+        cartographer = new Cartographer(startingRoom);
+        cartographer.update();
+
+        BorderPane top = new BorderPane();
+        top.setRight(buttonArea);
+        top.setCenter(cartographer);
+
+        BorderPane root = new BorderPane();
+        root.setTop(top);
+
+        messageArea.setEditable(false);
+        root.setCenter(messageArea);
+
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void generateButtons() {
         Button north = new Button("North");
         Button west = new Button("West");
         Button east = new Button("East");
@@ -55,19 +80,8 @@ public class CrawlGui extends Application {
         buttonArea.add(fight, 0, 6);
         buttonArea.add(save, 0, 7);
 
-        BorderPane top = new BorderPane();
-        Cartographer cartographer = new Cartographer(startingRoom);
         cartographer.update();
-        top.setCenter(cartographer);
+    }
 
-        top.setRight(buttonArea);
-
-        BorderPane root = new BorderPane();
-        root.setTop(top);
-        root.setCenter(t2);
-
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
     }
 }
