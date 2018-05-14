@@ -84,27 +84,42 @@ public class CrawlGui extends Application {
         north.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                tryExit(north.getText());
             }
         });
         south.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                tryExit(south.getText());
             }
         });
         east.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                tryExit(east.getText());
             }
         });
         west.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                tryExit(west.getText());
             }
         });
     }
 
+    private void tryExit(String exitName) {
+        if (currentRoom.getExits().containsKey(exitName)) {
+            if (currentRoom.leave(player)) {
+                currentRoom = currentRoom.getExits().get(exitName);
+                currentRoom.enter(player);
+            } else
+                log("Something prevents you from leaving");
+        } else
+            log("No door that way");
         cartographer.update();
     }
 
+    private void log(String text) {
+        messageArea.appendText(text + "\n");
     }
 }
