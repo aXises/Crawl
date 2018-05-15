@@ -27,6 +27,7 @@ public class Cartographer extends Canvas {
             drawRoom(bm.coords.get(key).x, bm.coords.get(key).y, key);
         }
     }
+
     private void drawRoom(int x, int y, Room room) {
         Double xMid = getMid()[0] - (length / 2) + (x * length);
         Double yMid = getMid()[1] - (length / 2) + (y * length);

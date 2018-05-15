@@ -134,7 +134,6 @@ public class CrawlGui extends Application {
             @Override
             public void handle(ActionEvent event) {
                 TextInputDialog input = new TextInputDialog();
-
                 input.initStyle(StageStyle.UTILITY);
                 input.setGraphic(null);
                 input.setTitle("Examine what?");
@@ -163,6 +162,7 @@ public class CrawlGui extends Application {
         }
         return null;
     }
+
 
     private void tryExit(String exitName) {
         if (currentRoom.getExits().containsKey(exitName)) {
