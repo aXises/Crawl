@@ -152,6 +152,26 @@ public class CrawlGui extends Application {
                 }
             }
         });
+        drop.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                TextInputDialog input = new TextInputDialog();
+                input.initStyle(StageStyle.UTILITY);
+                input.setGraphic(null);
+                input.setTitle("Item to drop?");
+                input.setHeaderText("Item to drop?");
+                Optional<String> res = input.showAndWait();
+                if (res.isPresent()) {
+                    Thing thing;
+                    if ((thing = player.drop(res.get())) != null) {
+                        currentRoom.enter(thing);
+                        cartographer.update();
+                    }
+                    else
+                        log("Nothing found with that name");
+                }
+            }
+        });
     }
 
     private Thing getThing(String name, List<Thing>  list) {
