@@ -172,6 +172,36 @@ public class CrawlGui extends Application {
                 }
             }
         });
+        take.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                TextInputDialog input = new TextInputDialog();
+                input.initStyle(StageStyle.UTILITY);
+                input.setGraphic(null);
+                input.setTitle("Take what?");
+                input.setHeaderText("Take what?");
+                Optional<String> res = input.showAndWait();
+                if (res.isPresent()) {
+                    Thing t = null;
+                    for (Thing thing : currentRoom.getContents()) {
+                        if (thing.getShort().equals(res.get())) {
+                            if (!(thing instanceof Player)) {
+                                if (thing instanceof Mob && !((Mob) thing)
+                                        .isAlive()) {
+                                    t = thing;
+                                } else {
+                                    t = thing;
+                                }
+                            }
+                        }
+                    }
+                    if (currentRoom.leave(t)) {
+                        player.add(t);
+                        cartographer.update();
+                    }
+                }
+            }
+        });
     }
 
     private Thing getThing(String name, List<Thing>  list) {
