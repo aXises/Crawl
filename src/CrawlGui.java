@@ -106,6 +106,24 @@ public class CrawlGui extends Application {
                 tryExit(west.getText());
             }
         });
+        look.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                log(currentRoom.getDescription() + "- you see:");
+                for (Thing thing: currentRoom.getContents()) {
+                    log(" " + thing.getShort());
+                }
+                log("You are carrying:");
+                double totalValue = 0;
+                for (Thing thing : player.getContents()) {
+                    log(" " + thing.getShort());
+                    totalValue += thing instanceof Lootable ?
+                            ((Lootable) thing).getValue() : 0;
+                }
+                log("worth " + String.format("%.1f", totalValue)
+                        + " in total");
+            }
+        });
     }
 
     private void tryExit(String exitName) {
