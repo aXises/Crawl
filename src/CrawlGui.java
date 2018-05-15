@@ -5,9 +5,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import java.lang.reflect.Array;
+import java.util.List;
+import java.util.Optional;
 
 public class CrawlGui extends Application {
     private static Room startingRoom;
@@ -124,6 +130,38 @@ public class CrawlGui extends Application {
                         + " in total");
             }
         });
+        examine.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                TextInputDialog input = new TextInputDialog();
+
+                input.initStyle(StageStyle.UTILITY);
+                input.setGraphic(null);
+                input.setTitle("Examine what?");
+                input.setHeaderText("Examine what?");
+                Optional<String> res = input.showAndWait();
+                if (res.isPresent()) {
+                    Thing thing;
+                    if ((thing = getThing(res.get(), player.getContents()))
+                            != null)
+                        log(thing.getDescription());
+                    else if ((thing = getThing(res.get(), currentRoom
+                            .getContents())) != null)
+                        log(thing.getDescription());
+                    else
+                        log("Nothing found with that name");
+                }
+            }
+        });
+    }
+
+    private Thing getThing(String name, List<Thing>  list) {
+        for (Thing thing : list) {
+            if (thing.getShort().equals(name)) {
+                return thing;
+            }
+        }
+        return null;
     }
 
     private void tryExit(String exitName) {
