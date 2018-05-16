@@ -1,0 +1,23 @@
+4
+the atrium
+the hall
+the kitchen
+the library
+1
+1 East
+2
+2 North
+0 West
+2
+3 North
+1 South
+1
+2 South
+0
+0
+2
+$;0.00000;lump of coal
+$;1.00000;copper coin
+2
+C;0.00000;1;grid bug;Noone knows what this thing is
+$;-2.00000;stale brownie

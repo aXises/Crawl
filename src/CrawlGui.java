@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -198,6 +199,31 @@ public class CrawlGui extends Application {
                     if (currentRoom.leave(t)) {
                         player.add(t);
                         cartographer.update();
+                    }
+                }
+            }
+        });
+        fight.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                TextInputDialog input = new TextInputDialog();
+                input.initStyle(StageStyle.UTILITY);
+                input.setGraphic(null);
+                input.setTitle("Fight what?");
+                input.setHeaderText("Fight what?");
+                Optional<String> res = input.showAndWait();
+                if (res.isPresent()) {
+                    Thing t = getThing(res.get(), currentRoom.getContents());
+                    if (t instanceof Critter) {
+                        player.fight((Critter) t);
+                        if (player.getHealth() > 0) {
+                            log("You won");
+                        } else {
+                            log("Game over");
+                            for (Node button : buttonArea.getChildren()) {
+                                button.setDisable(true);
+                            }
+                        }
                     }
                 }
             }
