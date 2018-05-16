@@ -228,6 +228,21 @@ public class CrawlGui extends Application {
                 }
             }
         });
+        save.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                TextInputDialog input = new TextInputDialog();
+                input.initStyle(StageStyle.UTILITY);
+                input.setGraphic(null);
+                input.setTitle("Save filename?");
+                input.setHeaderText("Save filename");
+                Optional<String> res = input.showAndWait();
+                if (res.isPresent()) {
+                    log(MapIO.saveMap(startingRoom, res.get()) ? "Saved" :
+                            "Unable to save");
+                }
+            }
+        });
     }
 
     private Thing getThing(String name, List<Thing>  list) {
