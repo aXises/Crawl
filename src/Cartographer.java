@@ -5,24 +5,24 @@ import javafx.scene.paint.Color;
 public class Cartographer extends Canvas {
     public GraphicsContext gc;
     private Room root;
+    BoundsMapper bm ;
     private final int length = 50;
     public Cartographer(Room startingRoom) {
         gc = getGraphicsContext2D();
         root = startingRoom;
+        bm = new BoundsMapper(root);
         gc.setLineWidth(1.0);
     }
 
-    private int abs(int n) {
+    private double abs(int n) {
       return n < 0 ? (-1 * n) : n;
     }
 
     public void update() {
-        BoundsMapper bm = new BoundsMapper(root);
         bm.walk();
-        setWidth((bm.xMax + abs(bm.xMin) + 1) * 100);
-        setHeight((bm.yMax + abs(bm.yMin) + 1) * 100);
+        setWidth((bm.xMax + abs(bm.xMin) + 2) * length);
+        setHeight((bm.yMax + abs(bm.yMin) + 2) * length);
         gc.clearRect(0, 0, getWidth(), getHeight());
-        gc.strokeRect(0, 0, getWidth(), getHeight());
         for (Room key: bm.coords.keySet()) {
             drawRoom(bm.coords.get(key).x, bm.coords.get(key).y, key);
         }
@@ -31,23 +31,27 @@ public class Cartographer extends Canvas {
     private void drawRoom(int x, int y, Room room) {
         Double xMid = getMid()[0] - (length / 2) + (x * length);
         Double yMid = getMid()[1] - (length / 2) + (y * length);
-        gc.strokeRect(xMid, yMid, length, length);
+        Double xOffset = (abs(bm.xMin) - bm.xMax) * length / 2;
+        Double yOffset = (abs(bm.yMin) - bm.yMax) * length / 2;
+        Double xPos = xMid + xOffset;
+        Double yPos = yMid + yOffset;
+        gc.strokeRect(xPos, yPos, length, length);
         for (String exit : room.getExits().keySet()) {
             switch(exit) {
                 case "North":
-                    gc.strokeLine(xMid + (length / 2), yMid - 5, xMid + (length
-                            / 2), yMid);
+                    gc.strokeLine(xPos + (length / 2), yPos - 5,
+                            xPos + (length / 2), yPos);
                     break;
                 case "South":
-                    gc.strokeLine(xMid + (length / 2), yMid + length, xMid +
-                            (length / 2), yMid + length + 5);
+                    gc.strokeLine(xPos + (length / 2), yPos + length, xPos +
+                            (length / 2), yPos + length + 5);
                     break;
                 case "East":
-                    gc.strokeLine(xMid + length, yMid + (length / 2), xMid +
-                            length + 5, yMid + (length / 2));
+                    gc.strokeLine(xPos + length, yPos + (length / 2), xPos +
+                            length + 5, yPos + (length / 2));
                     break;
                 case "West":
-                    gc.strokeLine(xMid, yMid + (length / 2), xMid - 5, yMid +
+                    gc.strokeLine(xPos, yPos + (length / 2), xPos - 5, yPos +
                             (length / 2));
                     break;
                 default:
@@ -56,19 +60,19 @@ public class Cartographer extends Canvas {
         }
         for (Thing thing : room.getContents()) {
             if (thing instanceof Player) {
-                gc.fillText("@", xMid, yMid + length / 4);
+                gc.fillText("@", xPos, yPos + length / 4);
             }
             else if (thing instanceof Treasure) {
-                gc.fillText("$", xMid + (length / 2), yMid + (length / 4));
+                gc.fillText("$", xPos + (length / 2), yPos + (length / 4));
             }
             else if (thing instanceof Critter) {
-                gc.fillText("M", xMid, yMid + (length / 1.5));
+                gc.fillText("M", xPos, yPos + (length / 1.5));
             }
         }
     }
 
-    private Double[] getMid() {
-        Double[] xy = {getWidth()/2, getHeight()/2};
+    private double[] getMid() {
+        double[] xy = {getWidth()/2, getHeight()/2};
         return xy;
     }
 }
