@@ -133,7 +133,7 @@ public class CrawlGui extends Application {
         look.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                log(currentRoom.getDescription() + "- you see:");
+                log(currentRoom.getDescription() + " - you see:");
                 for (Thing thing: currentRoom.getContents()) {
                     log(" " + thing.getShort());
                 }
