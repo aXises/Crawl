@@ -4,7 +4,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
@@ -12,18 +11,27 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Optional;
 
 public class CrawlGui extends Application {
+    // Starting room of the map
     private static Room startingRoom;
+    // The player object
     private static Player player;
+    // The current room the player is in
     private Room currentRoom;
+    // Pane containing all the buttons
     private GridPane buttonArea = new GridPane();
+    // The message area which displays text messages
     private TextArea messageArea = new TextArea();
+    // Cartographer which draws the map
     private Cartographer cartographer;
 
+    /**
+     * Entry point of the program
+     * @param args Arguments to the program
+     */
     public static void main(String args[]) {
         if (args.length != 1) {
             System.out.println("Usage: java CrawlGui mapname");
@@ -45,7 +53,7 @@ public class CrawlGui extends Application {
     }
 
     public void start(Stage stage) {
-        stage.setTitle("Crawl");
+        stage.setTitle("Crawl - Explore");
         generateButtons();
         startingRoom.enter(player);
         currentRoom = startingRoom;
@@ -60,7 +68,7 @@ public class CrawlGui extends Application {
         root.setTop(top);
 
         messageArea.setEditable(false);
-        root.setCenter(messageArea);
+        root.setBottom(messageArea);
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -68,6 +76,9 @@ public class CrawlGui extends Application {
         log("You find your self in " + currentRoom.getDescription());
     }
 
+    /**
+     * Method to generate and add functionality of all the buttons.
+     */
     private void generateButtons() {
         Button north = new Button("North");
         Button west = new Button("West");
@@ -79,6 +90,7 @@ public class CrawlGui extends Application {
         Button take = new Button("Take");
         Button fight = new Button("Fight");
         Button save = new Button("Save");
+        // Add buttons to the grid pane
         buttonArea.add(north, 1 ,0);
         buttonArea.add(west, 0 ,1);
         buttonArea.add(east, 2 ,1);
@@ -89,30 +101,35 @@ public class CrawlGui extends Application {
         buttonArea.add(take, 1, 5);
         buttonArea.add(fight, 0, 6);
         buttonArea.add(save, 0, 7);
+        // Attempt to interact with the north exit
         north.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 tryExit(north.getText());
             }
         });
+        // Attempt to interact with the south exit
         south.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 tryExit(south.getText());
             }
         });
+        // Attempt to interact with the east exit
         east.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 tryExit(east.getText());
             }
         });
+        // Attempt to interact with the west exit
         west.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 tryExit(west.getText());
             }
         });
+        // Handle functionality of the look button
         look.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -131,6 +148,7 @@ public class CrawlGui extends Application {
                         + " in total");
             }
         });
+        // Handle functionality of the example button
         examine.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -153,6 +171,7 @@ public class CrawlGui extends Application {
                 }
             }
         });
+        // Handle functionality of the drop button
         drop.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -173,6 +192,7 @@ public class CrawlGui extends Application {
                 }
             }
         });
+        // Handle functionality of the take button
         take.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -203,6 +223,7 @@ public class CrawlGui extends Application {
                 }
             }
         });
+        // Handle functionality of the fight button
         fight.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -228,6 +249,7 @@ public class CrawlGui extends Application {
                 }
             }
         });
+        // Handle functionality of the save button
         save.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -245,7 +267,13 @@ public class CrawlGui extends Application {
         });
     }
 
-    private Thing getThing(String name, List<Thing>  list) {
+    /**
+     * Gets a Thing from a list by its description
+     * @param name The name of the Thing
+     * @param list The list to iterate through
+     * @return the Thing object or null if not found
+     */
+    private Thing getThing(String name, List<Thing> list) {
         for (Thing thing : list) {
             if (thing.getShort().equals(name)) {
                 return thing;
@@ -254,7 +282,10 @@ public class CrawlGui extends Application {
         return null;
     }
 
-
+    /**
+     * Attempt to interact with a exit
+     * @param exitName The name of the exit to interact with
+     */
     private void tryExit(String exitName) {
         if (currentRoom.getExits().containsKey(exitName)) {
             if (currentRoom.leave(player)) {
@@ -267,6 +298,10 @@ public class CrawlGui extends Application {
         cartographer.update();
     }
 
+    /**
+     * Logs a string to the message area
+     * @param text
+     */
     private void log(String text) {
         messageArea.appendText(text + "\n");
     }
