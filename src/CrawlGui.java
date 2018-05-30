@@ -8,6 +8,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -21,8 +22,10 @@ public class CrawlGui extends Application {
     private static Player player;
     // The current room the player is in
     private Room currentRoom;
-    // Pane containing all the buttons
-    private GridPane buttonArea = new GridPane();
+    // Upper Pane containing all the buttons
+    private GridPane buttonAreaUpper = new GridPane();
+    // Lower Pane containing all the buttons
+    private GridPane buttonAreaLower = new GridPane();
     // The message area which displays text messages
     private TextArea messageArea = new TextArea();
     // Cartographer which draws the map
@@ -60,8 +63,12 @@ public class CrawlGui extends Application {
         cartographer = new Cartographer(startingRoom);
         cartographer.update();
 
+
+        VBox buttonBox = new VBox();
+        buttonBox.getChildren().addAll(buttonAreaUpper, buttonAreaLower);
+
         BorderPane top = new BorderPane();
-        top.setRight(buttonArea);
+        top.setRight(buttonBox);
         top.setCenter(cartographer);
 
         BorderPane root = new BorderPane();
@@ -91,16 +98,16 @@ public class CrawlGui extends Application {
         Button fight = new Button("Fight");
         Button save = new Button("Save");
         // Add buttons to the grid pane
-        buttonArea.add(north, 1 ,0);
-        buttonArea.add(west, 0 ,1);
-        buttonArea.add(east, 2 ,1);
-        buttonArea.add(south, 1 ,3);
-        buttonArea.add(look, 0, 4);
-        buttonArea.add(examine, 1, 4);
-        buttonArea.add(drop, 0, 5);
-        buttonArea.add(take, 1, 5);
-        buttonArea.add(fight, 0, 6);
-        buttonArea.add(save, 0, 7);
+        buttonAreaUpper.add(north, 1 ,0);
+        buttonAreaUpper.add(west, 0 ,1);
+        buttonAreaUpper.add(east, 2 ,1);
+        buttonAreaUpper.add(south, 1 ,3);
+        buttonAreaLower.add(look, 0, 4);
+        buttonAreaLower.add(examine, 1, 4);
+        buttonAreaLower.add(drop, 0, 5);
+        buttonAreaLower.add(take, 1, 5);
+        buttonAreaLower.add(fight, 0, 6);
+        buttonAreaLower.add(save, 0, 7);
         // Attempt to interact with the north exit
         north.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -241,7 +248,10 @@ public class CrawlGui extends Application {
                             log("You won");
                         } else {
                             log("Game over");
-                            for (Node button : buttonArea.getChildren()) {
+                            for (Node button : buttonAreaUpper.getChildren()) {
+                                button.setDisable(true);
+                            }
+                            for (Node button : buttonAreaLower.getChildren()) {
                                 button.setDisable(true);
                             }
                         }
